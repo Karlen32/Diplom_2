@@ -1,0 +1,33 @@
+import allure
+from helpers.api_client import ApiClient
+from data.user_data import generate_user
+
+client = ApiClient()
+
+
+class TestCreateUser:
+
+    @allure.title("Создание уникального пользователя")
+    def test_create_unique_user(self, registered_user):
+        response = registered_user["response"]
+
+        assert response.status_code == 200
+        assert response.json()["success"] is True
+
+    @allure.title("Создание пользователя, который уже зарегистрирован")
+    def test_create_existing_user(self, registered_user):
+        payload = registered_user["user"]
+        response = client.post("/auth/register", payload)
+
+        assert response.status_code == 403
+        assert response.json()["success"] is False
+
+    @allure.title("Создание пользователя без обязательного поля")
+    def test_create_user_without_password(self):
+        payload = generate_user()
+        payload.pop("password")
+
+        response = client.post("/auth/register", payload)
+
+        assert response.status_code == 403
+        assert response.json()["success"] is False
