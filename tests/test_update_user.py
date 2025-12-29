@@ -7,8 +7,8 @@ client = ApiClient()
 class TestUpdateUser:
 
     @allure.title("Изменение данных пользователя с авторизацией")
-    def test_update_user_with_auth(self, authorized_user):
-        response = client.patch("/auth/user", {"name": "New Name"}, authorized_user)
+    def test_update_user_with_auth(self, authorized_headers):
+        response = client.patch("/auth/user", {"name": "New Name"}, authorized_headers)
 
         assert response.status_code == 200
         assert response.json()["success"] is True

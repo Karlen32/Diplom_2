@@ -8,11 +8,11 @@ client = ApiClient()
 class TestCreateOrder:
 
     @allure.title("Создание заказа с авторизацией и ингредиентами")
-    def test_create_order_with_auth(self, authorized_user):
+    def test_create_order_with_auth(self, authorized_headers):
         response = client.post(
             "/orders",
             {"ingredients": get_ingredients_ids()[:2]},
-            authorized_user
+            authorized_headers
         )
 
         assert response.status_code == 200

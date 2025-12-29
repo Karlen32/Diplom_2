@@ -7,8 +7,8 @@ client = ApiClient()
 class TestGetOrders:
 
     @allure.title("Получение заказов авторизованным пользователем")
-    def test_get_orders_authorized(self, authorized_user):
-        response = client.get("/orders", authorized_user)
+    def test_get_orders_authorized(self, authorized_headers):
+        response = client.get("/orders", authorized_headers)
 
         assert response.status_code == 200
         assert response.json()["success"] is True
