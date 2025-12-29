@@ -1,4 +1,5 @@
 import allure
+import pytest
 from helpers.api_client import ApiClient
 from data.user_data import generate_user
 
@@ -26,11 +27,15 @@ class TestCreateUser:
         assert response.json()["success"] is False
 
     @allure.title("Создание пользователя без обязательного поля")
-    def test_create_user_without_password(self):
+    @pytest.mark.parametrize(
+        "missing_field",
+        ["email", "password", "name"])
+    def test_create_user_without_required_field(self, missing_field):
         payload = generate_user()
-        payload.pop("password")
+        payload.pop(missing_field)
 
         response = client.post("/auth/register", payload)
+        body = response.json()
 
         assert response.status_code == 403
-        assert response.json()["success"] is False
+        assert body["success"] is False
