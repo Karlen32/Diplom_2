@@ -15,7 +15,14 @@ class TestCreateOrder:
             authorized_headers
         )
 
+        body = response.json()
+
         assert response.status_code == 200
+        assert body["success"] is True
+        assert isinstance(body["name"], str)
+        assert body["name"]
+        assert isinstance(body["order"]["number"], int)
+
 
     @allure.title("Создание заказа без авторизации")
     def test_create_order_without_auth(self):
