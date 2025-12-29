@@ -8,11 +8,14 @@ client = ApiClient()
 class TestCreateUser:
 
     @allure.title("Создание уникального пользователя")
-    def test_create_unique_user(self, registered_user):
-        response = registered_user["response"]
+    def test_create_unique_user(self, user_data, cleanup_user):
+        response = client.post("/auth/register", user_data)
+        body = response.json()
+
+        cleanup_user.append(body["accessToken"])
 
         assert response.status_code == 200
-        assert response.json()["success"] is True
+        assert body["success"] is True
 
     @allure.title("Создание пользователя, который уже зарегистрирован")
     def test_create_existing_user(self, registered_user):

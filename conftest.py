@@ -31,3 +31,11 @@ def authorized_headers(registered_user):
     return {
         "Authorization": registered_user["token"]
     }
+
+@pytest.fixture
+def cleanup_user():
+    tokens = []
+    yield tokens
+
+    for token in tokens:
+        delete_user(token)
